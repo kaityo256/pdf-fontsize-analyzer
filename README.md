@@ -64,6 +64,10 @@ Font Size    Character count
 Average Size: 9.58
 ```
 
+## Known Issues
+
+PDF files generated from some applications, such as **Microsoft Word on macOS** may not report character counts accurately. As a result, the script may undercount or fail to detect characters in such files.
+
 ## License
 
 This project is licensed under the MIT License.
