@@ -103,10 +103,8 @@ def parse_args
     end
   end
 
-  # オプションを解析
   opt_parser.parse!
 
-  # 残った引数（位置引数）からファイル名を取得
   if ARGV.empty?
     warn 'Error: You must specify a PDF filename.'
     puts opt_parser
