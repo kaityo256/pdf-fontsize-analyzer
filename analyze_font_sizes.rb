@@ -6,6 +6,10 @@ require 'hexapdf'
 require 'optparse'
 require 'hexapdf/content/parser'
 
+def contains_control_char?(str)
+  !!(str =~ /[\x00-\x1F\x7F]/)
+end
+
 def process_contents(contents, font_size_hash, options)
   parser = HexaPDF::Content::Parser.new
   contents.each do |stream|
@@ -21,11 +25,11 @@ def process_contents(contents, font_size_hash, options)
         operands[0].each do |v|
           next unless v.is_a?(String)
 
-          if v.ascii_only?
-            font_size_hash[current_size] += v.size
-          else
+          if contains_control_char?(v)
             font_size_hash[current_size] += v.size / 2
-            v = "<#{v.bytes.map { |b| format('%02X', b) }.join}>" unless v.ascii_only?
+            v = "<#{v.bytes.map { |b| format('%02X', b) }.join}>"
+          else
+            font_size_hash[current_size] += v.size
           end
           puts v if options[:verbose]
         end
