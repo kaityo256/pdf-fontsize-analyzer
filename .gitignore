@@ -1,1 +1,7 @@
 vendor
+*.fls
+*.aux
+*.fdb_latexmk
+*.log
+*.gz
+*.dvi

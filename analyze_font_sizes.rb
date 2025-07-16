@@ -53,6 +53,6 @@ end
 
 filename = ARGV[0]
 HexaPDF::Document.open(filename) do |doc|
-  show_stream(doc)
-  # analyze(doc)
+  # show_stream(doc)
+  analyze(doc)
 end
