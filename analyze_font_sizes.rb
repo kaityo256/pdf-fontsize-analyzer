@@ -53,9 +53,16 @@ end
 def show_results(font_size_hash, options)
   font_size_hash = round_size(font_size_hash, options)
   puts "Font Size\tCharacter count"
+  average_size = 0
+  count = 0
   font_size_hash.keys.sort.each do |size|
     puts "#{size}\t\t#{font_size_hash[size]}"
+    average_size += size * font_size_hash[size]
+    count += font_size_hash[size]
   end
+  puts
+
+  puts "Average Size: #{(average_size / count).round(2)}"
 end
 
 def analyze(doc, options)
@@ -86,7 +93,7 @@ def parse_args
       options[:verbose] = true
     end
 
-    opts.on('--round-size[=STEP]', Float, 'Round font sizes to nearest STEP (e.g., 0.5)') do |step|
+    opts.on('-r', '--round-size[=STEP]', Float, 'Round font sizes to nearest STEP (e.g., 0.5)') do |step|
       options[:round_size] = step || 0.5
     end
 
