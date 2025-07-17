@@ -64,6 +64,27 @@ Font Size    Character count
 Average Size: 9.58
 ```
 
+When the verbose option is specified, detailed PDF parsing logs will be displayed as shown below.
+
+```sh
+$ ruby analyze_font_size.rb -v samples/latex.pdf
+Page 1:
+Scaling Matrix [1, 0, 0, 1, 72, 769.89]
+Font F0, Fontsize 9.9626, Scale 1.0
+This
+is
+a
+p
+en.
+Font F2, Fontsize 9.2125, Scale 1.0
+<035C0395037803D603EF03700362027B>
+Font Size	Character count
+9.2125		8
+9.9626		11
+
+Average Size: 9.65
+```
+
 ## Known Issues
 
 PDF files generated from some applications, such as **Microsoft Word on macOS** may not report character counts accurately. As a result, the script may undercount or fail to detect characters in such files.
