@@ -16,20 +16,32 @@ def process_contents(contents, font_size_hash, options)
     stream = doc.object(stream) if stream.is_a?(Integer)
     buffer = stream.respond_to?(:stream) ? stream.stream : stream
     current_size = 0
+    current_scale = 1.0
     parser.parse(buffer) do |operator, operands|
       case operator
+      when :cm
+        # 変換行列を検出したら、縦横のスケールの調和平均をスケールパラメータとする
+        r1 = operands[0]
+        r2 = operands[3]
+        current_scale = Math.sqrt(r1 * r2)
+        puts "Scaling Matrix #{operands}" if options[:verbose]
+      when :Q
+        # Qを検出したらスケールを元に戻す(厳密な対応ではない)
+        current_scale = 1.0
       when :Tf
         current_font, current_size = operands
-        puts "Font #{current_font}, Fontsize #{current_size}" if options[:verbose]
+        puts "Font #{current_font}, Fontsize #{current_size}, Scale #{current_scale}" if options[:verbose]
       when :TJ
         operands[0].each do |v|
           next unless v.is_a?(String)
 
+          font_size = current_size * current_scale
+
           if contains_control_char?(v)
-            font_size_hash[current_size] += v.size / 2
+            font_size_hash[font_size] += v.size / 2
             v = "<#{v.bytes.map { |b| format('%02X', b) }.join}>"
           else
-            font_size_hash[current_size] += v.size
+            font_size_hash[font_size] += v.size
           end
           puts v if options[:verbose]
         end
